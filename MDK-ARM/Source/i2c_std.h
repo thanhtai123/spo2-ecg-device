@@ -14,13 +14,13 @@
 
 #define I2C2_SCL_GPIO								GPIOB
 #define I2C2_SCL_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C2_SCL_Pin            			GPIO_Pin_10//10
+#define I2C2_SCL_Pin            			GPIO_Pin_6//10
 
 #define I2C2_SDA_GPIO								GPIOB
 #define I2C2_SDA_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C2_SDA_Pin            			GPIO_Pin_11//11
+#define I2C2_SDA_Pin            			GPIO_Pin_7//11
 
-#define US													2
+#define US													4
 
 struct i2c_port
 {

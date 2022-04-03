@@ -67,7 +67,8 @@ u16 specUnicode[]={
 	7907, //	ợ
 	7903, //	ở
 	7905, //	ỡ
-	273   //đ
+	273,   //đ
+	272,   // Ð
 };
 
 void copyArr(const u8* inArr, u8* outArr, u8 size);

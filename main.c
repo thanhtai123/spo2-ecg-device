@@ -13,30 +13,13 @@
 #define PPG_ESTIM_STATE 	4
 #define ECG_MODE_STATE 		5
 
-static u8 pinLevel, bluetoothConn, initState=0;
+static u8 pinLevel, bluetoothConn, initState=0, state_change_flag=0, spec_code=0;
 static u8 state = INTRO_STATE;
 
 uint32_t irArr[NUM_TEST]={1150653, 1150540, 1150541, 1150577, 1150667, 1150657, 1150671, 1150673, 1150650, 1150673, 1150705, 1150733, 1150771, 1150766, 1150791, 1150768, 1150768, 1150796, 1150706, 1150630, 1150636, 1150700, 1150754, 1150758, 1150776, 1150748, 1150715, 1150745, 1150757, 1150775, 1150794, 1150792, 1150811, 1150780, 1150779, 1150762, 1150682, 1150650, 1150662, 1150697, 1150708, 1150741, 1150781, 1150698, 1150687, 1150694, 1150721, 1150755, 1150733, 1150734, 1150735, 1150742, 1150764, 1150721, 1150625, 1150550, 1150597, 1150661, 1150663, 1150680, 1150688, 1150640, 1150647, 1150649, 1150673, 1150680, 1150687, 1150714, 1150689, 1150687, 1150694, 1150673, 1150598, 1150483, 1150493, 1150559, 1150573, 1150632, 1150613, 1150598, 1150578, 1150604, 1150652, 1150642, 1150648, 1150662, 1150678, 1150710, 1150689, 1150700, 1150665, 1150560, 1150541, 1150571, 1150627, 1150637, 1150664, 1150665, 1150631, 1150635 
 };
 uint32_t redArr[NUM_TEST]={1434721, 1434338, 1434289, 1434471, 1434665, 1434749, 1434792, 1434756, 1434701, 1434719, 1434807, 1434888, 1434962, 1434985, 1435023, 1435016, 1435025, 1435043, 1434828, 1434525, 1434503, 1434705, 1434863, 1434937, 1434970, 1434896, 1434827, 1434871, 1434923, 1434996, 1435045, 1435074, 1435068, 1435070, 1435082, 1435012, 1434755, 1434558, 1434651, 1434770, 1434896, 1434975, 1434953, 1434864, 1434811, 1434877, 1434941, 1434975, 1435020, 1435029, 1435045, 1435057, 1435064, 1435023, 1434692, 1434440, 1434545, 1434724, 1434834, 1434896, 1434908, 1434807, 1434752, 1434811, 1434881, 1434941, 1434978, 1434988, 1434988, 1434981, 1435000, 1434972, 1434648, 1434337, 1434386, 1434579, 1434690, 1434772, 1434807, 1434730, 1434687, 1434734, 1434795, 1434883, 1434910, 1434956, 1434968, 1434993, 1435023, 1435029, 1434934, 1434582, 1434396, 1434587, 1434748, 1434845, 1434911, 1434877, 1434810, 1434811 
 };
-int testFlag = 0;
-
-void testTimerInit(){
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;   
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-}
-
-void testTimer()
-{
-	if(testFlag==0) GPIO_SetBits(GPIOA, GPIO_Pin_10);
-	else GPIO_ResetBits(GPIOA, GPIO_Pin_10);
-	testFlag=(testFlag+1)%2;
-}
 
 void storeData(u16 timeMs){
 	SetTimer_ms(timeMs);
@@ -87,10 +70,6 @@ void transData(){
 	}
 }
 
-void transString(){
-	USART1_SendString("\na ă â \n");
-}
-
 u8 mode_btn(){
 	//return key_code[BUTTON_POWER_INDEX];
 	static u16 pVal;
@@ -135,7 +114,10 @@ void change_state(u8 nState){
 	state = nState;
 	oledClearScreen();
 	initState=0;
+	state_change_flag = 1;
+	spec_code = 0;
 }
+void doing_nothing(){};
 
 int main(void)
 {
@@ -165,68 +147,97 @@ int main(void)
 		pinLevel = get_pin_level();
 		bluetoothConn = get_bluetooth_status();
 		if(state!=INTRO_STATE) device_status(pinLevel, bluetoothConn);
+		if(state_change_flag){
+			if(
+				state == PPG_MODE_STATE ||
+				state == PPG_STORE_STATE ||
+				state == PPG_ESTIM_STATE
+			) oledPrintString("ppg", 110, 1, 5);
+			else oledPrintString("ecg", 110, 1, 5);
+		}
+			
 		switch(state){
 			case INTRO_STATE:
-				oledPrintString("Phiên bản demo v.1", 0, 7, 5);
-				intro_screen();
-				oledClearScreen();
-				state = PPG_MODE_STATE;
+				if(!initState){
+					oledPrintString("Phiên bản demo v.1", 0, 7, 5);
+					oledPrintString("Nhóm 3 - Power on", 2, 3, 5);
+					initState = 1;
+					state_change_flag = 0;
+					cnt1 = 20;
+				}
+				if(!cnt1--) change_state(PPG_MODE_STATE);
 				break;
 			case PPG_MODE_STATE:
 				if(!initState){
-					//ppg_mode_screen(100, 100);
-					oledPrintString("nhấn nút START để đo", 0, 7, 5);
+					oledPrintString("Nhấn nút START để đo", 0, 7, 5);
 					initState = 1;
+					state_change_flag = 0;
+					max30102ShutDown();
 				}
 				if(mode_btn()) change_state(ECG_MODE_STATE);
-				if(start_btn()) change_state(PPG_DETECT_STATE);
+				if(start_btn()) change_state(PPG_STORE_STATE);
 				break;
-			case PPG_DETECT_STATE:
+			case PPG_ESTIM_STATE:
 				if(!initState){
 					initState = 1;
-					max30102WakeUp();
-					oledPrintString("đặt ngón tay vào cảm biến", 0, 7, 5);
-					readAllSampleAvailable();
+					state_change_flag = 0;
+					cnt1 = 5;
+					maxim_heart_rate_and_oxygen_saturation(redArr,100,irArr,&pn_spo2,&pch_spo2_valid,&pn_heart_rate,&pch_hr_valid);
+					if(pn_heart_rate==-999||pn_spo2==-999){
+						change_state(PPG_STORE_STATE);
+						break;
+					}
+					oledPrintString("Nhịp tim: ", 0, 4, 5);
+					oledPrintString("SpO2: ", 0, 7, 5);
+					oledPrintChar('%', 45, 7);
+					oledPrintString("bpm", 65, 4, 5);
+					oledPrintString("   ", 10*5, 4, 5);
+					oledPrintString("   ", 6*5, 7, 5);
+					oledPrintNumber(pn_heart_rate, 10*5, 4);
+					oledPrintNumber(pn_spo2, 6*5, 7);
 					break;
 				}
-				cnt_sample = readAllSampleAvailable();
-				oledPrintString("                           ", 0, 7, 5);
-				oledPrintNumber(cnt_store, 0, 7);
-				cnt_store += cnt_sample;
-				cnt_store *= isValidData(cnt_sample);
-				if(cnt_store>10) change_state(PPG_STORE_STATE);
-				if(mode_btn()) change_state(PPG_MODE_STATE);
+				if(!cnt1--){
+					state = PPG_STORE_STATE;
+					initState=0;
+					state_change_flag = 1;
+					spec_code = 1;
+				}
 				break;
 			case PPG_STORE_STATE:
 				if(!initState){
 					initState = 1;
+					state_change_flag = 0;
 					cnt_store = 0;
-					//max30102WakeUp();
-					oledPrintString("đang lấy mẫu...", 0, 4, 5);
-					oledPrintChar('%', 15, 7);
+					if(!spec_code){
+						max30102WakeUp();
+						oledPrintString("Đang lấy mẫu...", 0, 4, 5);
+						oledPrintChar('%', 15, 7);
+					}
 					readAllSampleAvailable();
 					break;
 				}
 				cnt_sample = readAllSampleAvailable();
-				oledPrintString("   ", 0, 7, 5);
-				oledPrintNumber(cnt_store, 0, 7);
-				
+				if(!spec_code){
+					oledPrintString("   ", 0, 7, 5);
+					oledPrintNumber(cnt_store, 0, 7);
+				}
 				//store sample to array of red and ir led
 				for(i=0;i<cnt_sample;i++){
 					j=i+cnt_store;
+					if(j>=100) break;
 					irArr[j]=getIR(i);
 					redArr[j]=getRed(i);
 				}
 				cnt_store += cnt_sample;
 				cnt_store *= isValidData(cnt_sample);
 				cnt_store = cnt_store>100?100:cnt_store;
-				if(cnt_store>100) change_state(PPG_STORE_STATE);
+				if(cnt_store>=100) change_state(PPG_ESTIM_STATE);
 				if(mode_btn()) change_state(PPG_MODE_STATE);
-				break;
-			case PPG_ESTIM_STATE:
 				break;
 			case ECG_MODE_STATE:
 				if(!initState){
+					max30102ShutDown();
 					ecg_mode_screen(bluetoothConn);
 					initState = 1;
 				}
@@ -235,19 +246,6 @@ int main(void)
 			default:
 				break;
 		}
-		//transString();
-		//delay_ms(1000);
-		/*storeData(100);
-		//transData();
-		maxim_heart_rate_and_oxygen_saturation(redArr,100,irArr,&pn_spo2,&pch_spo2_valid,&pn_heart_rate,&pch_hr_valid);
-		if(pch_hr_valid==1) LcdPrintNumS(0,0,pn_heart_rate);
-		else LcdPrintNumS(0,0,-1);
-		if(pch_spo2_valid==1) LcdPrintNumS(1,5,pn_spo2);
-		else LcdPrintNumS(1,5,-1);
-		DisplayLcdScreen();
-		LcdClearS();*/
-		
-		
 	}
 
 }
@@ -265,6 +263,6 @@ void init_system(void)
 	init_button();
 	init_led();
 	max30102Setup();//always behind i2c set up
-	
+	oledClearScreen();
 }
 
