@@ -7,6 +7,7 @@ void intro_screen(){
 
 void device_status(u8 pinLevel, u8 bluetoothConn){
 	if(bluetoothConn) oledPrintIcon(5, 0, 1);
+	else oledPrintIcon(6, 0, 1);
 	if(pinLevel) oledPrintIcon(pinLevel, 80, 1);
 }
 

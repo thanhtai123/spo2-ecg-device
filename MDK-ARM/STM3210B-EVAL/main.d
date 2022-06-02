@@ -32,6 +32,7 @@
 .\stm3210b-eval\main.o: .\Source\delay.h
 .\stm3210b-eval\main.o: .\Source\lcd.h
 .\stm3210b-eval\main.o: .\Source\uart.h
+.\stm3210b-eval\main.o: D:\App\keilc\ARM\ARMCC\Bin\..\include\stdio.h
 .\stm3210b-eval\main.o: .\Source\output.h
 .\stm3210b-eval\main.o: .\Source\adc.h
 .\stm3210b-eval\main.o: .\Source\button.h
@@ -43,5 +44,11 @@
 .\stm3210b-eval\main.o: .\Source\spo2.h
 .\stm3210b-eval\main.o: .\Source\ssd1306.h
 .\stm3210b-eval\main.o: .\Source\font.h
-.\stm3210b-eval\main.o: D:\App\keilc\ARM\ARMCC\Bin\..\include\stdio.h
 .\stm3210b-eval\main.o: .\Source\display_screen.h
+.\stm3210b-eval\main.o: ..\stm32f10x_it.h
+.\stm3210b-eval\main.o: .\Source\buzzer.h
+.\stm3210b-eval\main.o: .\Source\button_int.h
+.\stm3210b-eval\main.o: .\Source\bluetooth.h
+.\stm3210b-eval\main.o: D:\App\keilc\ARM\ARMCC\Bin\..\include\stdbool.h
+.\stm3210b-eval\main.o: .\Source\ad8232.h
+.\stm3210b-eval\main.o: .\Source\eerom.h

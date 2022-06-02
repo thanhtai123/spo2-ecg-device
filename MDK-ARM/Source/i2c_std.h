@@ -6,19 +6,19 @@
 
 #define I2C1_SCL_GPIO								GPIOB
 #define I2C1_SCL_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C1_SCL_Pin            			GPIO_Pin_6
+#define I2C1_SCL_Pin            			GPIO_Pin_12//6
 
 #define I2C1_SDA_GPIO								GPIOB
 #define I2C1_SDA_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C1_SDA_Pin            			GPIO_Pin_7
+#define I2C1_SDA_Pin            			GPIO_Pin_13//7
 
 #define I2C2_SCL_GPIO								GPIOB
 #define I2C2_SCL_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C2_SCL_Pin            			GPIO_Pin_6//10
+#define I2C2_SCL_Pin            			GPIO_Pin_12//10
 
 #define I2C2_SDA_GPIO								GPIOB
 #define I2C2_SDA_GPIO_CLK         		RCC_APB2Periph_GPIOB
-#define I2C2_SDA_Pin            			GPIO_Pin_7//11
+#define I2C2_SDA_Pin            			GPIO_Pin_13//11
 
 #define US													4
 

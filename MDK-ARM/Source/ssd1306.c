@@ -77,7 +77,7 @@ void oledPrintChar(u16 character, u8 posX, u8 posY){
 	decode_arr(test+5, byteSend, 5);  // cause 1 page only need 4 bit, \
 												we need to covert 1 byte -> 2byte
 	send_char_4bit_height(posX, posY-2, byteSend, 5);
-	send_char_4bit_height(posX, posY-1, byteSend+5, 5);
+	send_char_4bit_height(posX, posY-1, byteSend + 5, 5);
 	
 	decode_arr(test, byteSend, 5);
 	send_char_4bit_height(posX, posY, byteSend, 5);
@@ -96,13 +96,57 @@ void oledPrintString(char* str, u8 posX, u8 posY, u8 width){
 		str+=2;
 	}
 	oledPrintChar(unicode, posX, posY);
-	oledPrintString(str+1, posX+width, posY, width);
+	if(unicode>64&&unicode<91)
+		oledPrintString(str+1, posX+width+1, posY, width);
+	else
+		oledPrintString(str+1, posX+width, posY, width);
 }
 
 void oledPrintNumber(long number, u8 posX, u8 posY){
 	char _sNum[21];
     sprintf(_sNum, "%ld", number);
 	oledPrintString(_sNum, posX, posY, 5);
+}
+
+void oledPrintLargeNumber(long number, u8 posX, u8 posY){
+	char _sNum[21];
+    sprintf(_sNum, "%ld", number);
+	oledPrintLargeString(_sNum, posX, posY, 13);
+}
+
+void oledPrintLargeChar(u16 character, u8 posX, u8 posY){
+	const u8* byteSend = ssd1306NUMled_font13x20[character-48];
+	u8 byteSend2[26];
+	decode_arr(byteSend, byteSend2, 13);
+	send_char_4bit_height(posX, posY-4, byteSend2, 13);
+	send_char_4bit_height(posX, posY-3, byteSend2+13, 13);
+	decode_arr(byteSend+13, byteSend2, 13);
+	send_char_4bit_height(posX, posY-2, byteSend2, 13);
+	send_char_4bit_height(posX, posY-1, byteSend2+13, 13);
+	decode_arr(byteSend+26, byteSend2, 13);
+	send_char_4bit_height(posX, posY, byteSend2, 13);
+}
+void oledPrintLargeString(char* str, u8 posX, u8 posY, u8 width){
+	if(!(*str)) return;
+	oledPrintLargeChar(*str, posX, posY);
+	oledPrintLargeString(str+1, posX+width, posY, width);
+}
+
+void oledPrintFormatNumber(long number, u8 posX, u8 posY, char* formatStr){
+	u8 numberLength = 1, tempNumber = number;
+	while(tempNumber/10!=0) {
+		numberLength++;
+		tempNumber/=10;
+	}
+	for(int i=0;i<4;i++) oledPrintLargeChar('9'+1,posX+13*i,posY);
+	oledPrintChar(' ',posX+13*4, posY);
+	oledPrintLargeNumber(number, posX, posY);
+	oledPrintString(formatStr, posX + 13*numberLength+2, posY, 6);
+}
+
+void oledPrintStatement(char* str, u8 posX, u8 posY){
+	oledPrintString("                          ", posX, posY, 5);
+	oledPrintString(str, posX, posY, 5);
 }
 
 void oledPrintIcon(u8 type, u8 posX, u8 posY){
@@ -113,6 +157,12 @@ void oledPrintIcon(u8 type, u8 posX, u8 posY){
 	switch(type){
 		case 5: //bluetooth
 			icon=bluetoothIcon();
+			decode_arr(icon, byteSend, bluetoothLength);
+			send_char_4bit_height(posX, posY-1, byteSend, bluetoothLength);
+			send_char_4bit_height(posX, posY, byteSend+bluetoothLength, bluetoothLength);
+			break;
+		case 6: //delete
+			icon=bluetoothIconDelete();
 			decode_arr(icon, byteSend, bluetoothLength);
 			send_char_4bit_height(posX, posY-1, byteSend, bluetoothLength);
 			send_char_4bit_height(posX, posY, byteSend+bluetoothLength, bluetoothLength);
@@ -134,11 +184,8 @@ void oledPrintIcon(u8 type, u8 posX, u8 posY){
 * Do what ever you want :))
 */
 void oledTest(){
-	const u8 byteSend[] = {0x11,0x11,0x11,0x11,0x44,0x44,0x44,0x55};
-	u8 byteSend2[16];
-	decode_arr(byteSend, byteSend2, 8);
-	set_cursor_pos(60,4);
-	send_byte_stream(byteSend,8,DAT_STRE);
+	oledPrintLargeNumber(123456789,0,7);
+
 }
 
 void set_cursor_pos(u8 posX, u8 posY){

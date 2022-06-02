@@ -12,24 +12,27 @@ void init_led(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(DEBUG_LED_GPIO, &GPIO_InitStructure);
     
-    RCC_APB2PeriphClockCmd(LED_CLK_GPIO_CLK, ENABLE);
-    GPIO_InitStructure.GPIO_Pin = LED_CLK_Pin;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
-    GPIO_Init(LED_CLK_GPIO, &GPIO_InitStructure);
+	/*RCC_APB2PeriphClockCmd(LED_CLK_GPIO_CLK, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = LED_CLK_Pin;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
+	GPIO_Init(LED_CLK_GPIO, &GPIO_InitStructure);*/
+	
+	RCC_APB2PeriphClockCmd(LED_LAT_GPIO_CLK, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = LED_LAT_Pin;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
+	GPIO_Init(LED_LAT_GPIO, &GPIO_InitStructure);
     
-    RCC_APB2PeriphClockCmd(LED_LAT_GPIO_CLK, ENABLE);
-    GPIO_InitStructure.GPIO_Pin = LED_LAT_Pin;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
-    GPIO_Init(LED_LAT_GPIO, &GPIO_InitStructure);
-    
-    RCC_APB2PeriphClockCmd(LED_SDO_GPIO_CLK, ENABLE);
-    GPIO_InitStructure.GPIO_Pin = LED_SDO_Pin;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
-    GPIO_Init(LED_SDO_GPIO, &GPIO_InitStructure);
+	RCC_APB2PeriphClockCmd(LED_SDO_GPIO_CLK, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = LED_SDO_Pin;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
+	GPIO_Init(LED_SDO_GPIO, &GPIO_InitStructure);
+		
 }
+
+
 
 void DebugLedOn(void)
 {

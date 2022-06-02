@@ -58,7 +58,7 @@ void init_adc(void)
     ADC_Init(ADC1, &ADC_InitStructure);
 
     /* ADC1 regular channel14 configuration */ 
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_14, 1, ADC_SampleTime_55Cycles5);
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_8, 1, ADC_SampleTime_55Cycles5);
 
 
     /* Enable ADC1 DMA */
@@ -94,6 +94,7 @@ void get_adc(void)
     {
         sum = sum + raw_adc_value[i];
     }
-    adc_value = sum/NUMBER_OF_SAMPLE;
+	//adc_value = sum;
+     adc_value = sum/NUMBER_OF_SAMPLE;
 
 }

@@ -44,6 +44,15 @@ void RTC_IRQHandler(void);
 void TIM5_IRQHandler(void);
 void EXTI9_5_IRQHandler(void);
 
+void USART1_IRQHandler(void);
+void EXTI2_IRQHandler(void);
+
+
+extern u8 check_rcv_flag;
+extern char rcv_buffer[];
+extern u8 check_rcv_flag2;
+extern char rcv_buffer2[];
+extern u8 button_int_flag;
 #endif /* __STM32F10x_IT_H */
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

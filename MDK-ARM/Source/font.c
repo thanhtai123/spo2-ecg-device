@@ -97,13 +97,18 @@ u8* bluetoothIcon(){
 	static u8 icon[]={0x22, 0x14, 0x7f, 0x2a, 0x14};
 	return icon;
 }
-
+u8* bluetoothIconDelete(){
+	static u8 icon[]={0x00, 0x00, 0x00, 0x00, 0x00};
+	return icon;
+}
 u8* pinIcon(u8 level){
 	static u8 icon[]={0x0c, 0x1e, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x3f, 0x00};
 	u8 i;
 	for(i=0;i<level;i++) icon[7-i]=0x2d;
 	return icon;
 }
+
+
 
 void copyArr(const u8* inArr, u8* outArr, u8 size){
 	u8 i;

@@ -15,6 +15,12 @@
 #include "spo2.h"
 #include "ssd1306.h"
 #include "display_screen.h"
+#include "stm32f10x_it.h"
+#include "buzzer.h"
+#include "button_int.h"
+#include "bluetooth.h"
+#include "ad8232.h"
+#include "eerom.h"
 
 void init_system(void);
 

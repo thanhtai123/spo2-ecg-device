@@ -15,12 +15,19 @@ void init_button(void){
     GPIO_InitStructure.GPIO_Pin = BUTTON_START_Pin;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;   
     GPIO_Init(BUTTON_START_GPIO, &GPIO_InitStructure);
+	
+	/*RCC_APB2PeriphClockCmd(POWER_EN_GPIO_CLK, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = POWER_EN_Pin;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
+	GPIO_Init(POWER_EN_GPIO, &GPIO_InitStructure);*/
 }
+
 
 void scan_button(void)
 {
 
-	if (!READ_POWER_BTN)
+	if (READ_POWER_BTN)
 		key_code[0] = key_code[0] + 1;
 	else
 		key_code[0] = 0;
@@ -31,3 +38,5 @@ void scan_button(void)
             key_code[1] = 0;
   
 }
+
+

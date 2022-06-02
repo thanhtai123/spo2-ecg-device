@@ -30,3 +30,4 @@
 .\stm3210b-eval\uart.o: ..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\stm3210b-eval\uart.o: ..\..\..\Libraries\STM32F10x_StdPeriph_Driver\inc\misc.h
 .\stm3210b-eval\uart.o: D:\App\keilc\ARM\ARMCC\Bin\..\include\stdio.h
+.\stm3210b-eval\uart.o: Source\timer.h

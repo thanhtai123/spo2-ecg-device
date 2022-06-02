@@ -66,7 +66,7 @@ void max30102ShutDown(void){
 	registerBitWrite(
 		ADDR_SHDN,
 		SHDN_MASK,
-		SHDN_WAKE_UP
+		SHDN_SHUT_DOWN
 	);
 }
 

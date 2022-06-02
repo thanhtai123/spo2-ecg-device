@@ -46,6 +46,11 @@ void oledPrintChar(u16 character, u8 posX, u8 posY);
 void oledPrintString(char* str, u8 posX, u8 posY, u8 width);
 void oledPrintIcon(u8 type, u8 posX, u8 posY);
 void oledPrintNumber(long number, u8 posX, u8 posY);
+void oledPrintLargeNumber(long number, u8 posX, u8 posY);
+void oledPrintLargeChar(u16 character, u8 posX, u8 posY);
+void oledPrintLargeString(char* str, u8 posX, u8 posY, u8 width);
+void oledPrintFormatNumber(long number, u8 posX, u8 posY, char* formatStr);
+void oledPrintStatement(char* str, u8 posX, u8 posY);
 void oledTest();
 
 #endif
